@@ -14,7 +14,7 @@ import android.widget.TextView;
  */
 public class FirtsFragment extends Fragment {
 
-    // MIAS
+    // VARIABLES FINAL PARA VALIDAR SI HA SIDO CHECKEADO O NO UN BUTTON DEL RADIO CON '0' O '1'
     private final int YES = 0;
     private final int NO = 1;
 
@@ -28,17 +28,19 @@ public class FirtsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+        // DEFINICIÓN DE LA VISTA CON LOS VALORES EN FALSE
         final View rootie = inflater.inflate(R.layout.fragment_simple, container, false);
 
         final RadioGroup radios = rootie.findViewById(R.id.radios);
-        //return inflater.inflate(R.layout.fragment_simple, container, false);
 
+        // SETTEO DE LOS VALORES DEL RADIOGROUP
         radios.setOnCheckedChangeListener(
                 new RadioGroup.OnCheckedChangeListener() {
                     // método por defecto
                     @Override
                     public void onCheckedChanged(RadioGroup radioGroup, int i) {
+
+                        // DECLARACIÓN DE UNA VISTA CON LOS VALORES DEL RADIOFROUP
                         View radius = radioGroup.findViewById(i);
                         int indice = radios.indexOfChild(radius);// ver
 
@@ -49,14 +51,13 @@ public class FirtsFragment extends Fragment {
                                 texti.setText(R.string.yes_message);
                                 break;
                             case NO:
-                                texti.setText(R.string.hello_blank_fragment);
+                                texti.setText(R.string.no_message);
                                 break;
                             default:
                                 break;
                         }
                     }
-                }
-        );
+                });
         return rootie;
     }
 }

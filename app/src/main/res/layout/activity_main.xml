@@ -15,7 +15,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <!--INCRUSTACIÓN DEL FRAGMEN-->
+    <!--INCRUSTACIÓN DEL FRAGMENT-->
     <fragment
         android:id="@+id/fragment"
         android:name="isabelcalzadilla.ioc.fragmentsactivity.FirtsFragment"
