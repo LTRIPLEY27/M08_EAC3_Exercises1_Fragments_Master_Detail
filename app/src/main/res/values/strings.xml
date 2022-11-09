@@ -8,5 +8,6 @@
     <string name="no">No?</string>
     <string name="yes_message">ARTICLE: Like</string>
     <string name="no_message">ARTICLE: Thanks</string>
+    <string name="show_me">show_me</string>
 
 </resources>

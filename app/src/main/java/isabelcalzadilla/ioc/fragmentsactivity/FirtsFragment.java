@@ -60,4 +60,10 @@ public class FirtsFragment extends Fragment {
                 });
         return rootie;
     }
+
+    // CÓDIGO PARA ADHERIR MULTIPLES FRAGMENTS, SE DEBE DE NECESARIAMENTE CREAR NUEVAS INSTANCIAS
+
+    public static FirtsFragment neoFragment(){
+        return new FirtsFragment();
+    }
 }
