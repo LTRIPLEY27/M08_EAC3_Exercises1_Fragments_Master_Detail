@@ -1,57 +1,117 @@
 package isabelcalzadilla.ioc.fragmentsactivity;
 
 import android.content.Context;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
+import android.content.Intent;
+import android.support.annotation.NonNull;
+
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Button;
-import android.widget.Toast;
+import android.view.ViewGroup;
+import android.widget.TextView;
+
+
+import java.util.List;
+
+import isabelcalzadilla.ioc.fragmentsactivity.content.Data;
 
 // implementamos la INTERFACE DECLARADA COMO LISTENER PARA RECIBIR LOS DATOS QUE SE GENEREN ALLÍ
-public class MainActivity extends AppCompatActivity implements FirtsFragment.OnFragmentInteractionListener{
+public class MainActivity extends AppCompatActivity {
 
-    private Button show;
-    private boolean isShower = false;
+    //private final List<String> prueba = Arrays.asList("Aristotles", "Plato", "Nietzsche", "Schopenhauer");
+    private RecyclerView rec;
 
-    // declaracion de una variable para el radio y el manejo de la interface
-    private int radio = 2; // --> 2 == NO BY DEFAULT
+    private boolean isOk = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        show = findViewById(R.id.button_show);
-        show.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(!isShower){
-                    displayFragment();
-                }
+        // RECYCLER VIEW
+        rec = findViewById(R.id.recycler_fragment);
+        rec.setAdapter(new RecyclerItems(Data.PHILOSOPHERS));
+
+        // éste condicional verifica la pantalla, si el fragment no es null activa la vista para múltiples fragments en TABLET, en caso contrario solo permanece activa la del teléfono, en caso
+        if(findViewById(R.id.detail) != null){
+            isOk = true;
+        }
+    }
+
+    //********************************************
+
+        // LLAMADO AL RECYCLER
+    //********************************************
+
+    class RecyclerItems extends RecyclerView.Adapter <RecyclerItems.ViewHolder>{
+
+        //private final List <String> items = new ArrayList<>();
+        private final List <Data.Author> items;
+
+        public RecyclerItems(List<Data.Author> prueba) {
+            items = prueba;
+        }
+
+        public class ViewHolder extends RecyclerView.ViewHolder {
+
+            final View view;
+            //final TextView texti_aut;
+            final TextView id_aut;
+            final TextView texti_bio;
+            Data.Author author;
+
+            public ViewHolder(@NonNull View itemView) {
+                super(itemView);
+                this.view = itemView;
+                this.id_aut = view.findViewById(R.id.content);
+                this.texti_bio = view.findViewById(R.id.content);
             }
-        });
-    }
 
-    public void displayFragment(){
-        // PASO DEL VALOR DEL BUTTON A LA INSTANCIA DEL FRAGMENR
-        FirtsFragment createdInstance = FirtsFragment.neoFragment(radio);
+        }
 
-        // FRAGMENT MANAGER
-        FragmentManager manager = getSupportFragmentManager(); //método defecto
-        FragmentTransaction transaction = manager.beginTransaction();
+        @NonNull
+        @Override
+        public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
 
-        transaction.add(R.id.fragment_container, createdInstance).addToBackStack(null).commit();
+            View view = LayoutInflater.from(viewGroup.getContext())
+                    .inflate(R.layout.content_fragment, viewGroup, false);
+            return new ViewHolder(view);
+        }
 
-        isShower = true;
+        @Override
+        public void onBindViewHolder(final ViewHolder viewHolder, int i) {
+            viewHolder.author = items.get(i);
+            viewHolder.id_aut.setText(String.valueOf(i + 1));
+            viewHolder.texti_bio.setText(items.get(i).author_name);
+            viewHolder.view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if(isOk){
+                        int index = viewHolder.getAdapterPosition();
 
-    }
+                        DetailFragment fragment = DetailFragment.newInstance(index);
+                        getSupportFragmentManager().beginTransaction()
+                                .replace(R.id.detail, fragment) // --VERIFICAR LAS ACTIVITYS
+                                .addToBackStack(null)
+                                .commit();
+                    } else {
+                        Context context = view.getContext();
+                        Intent intento = new Intent(context, ActivityDetail.class);
 
-    // MÉTODO DEL FRAGMENT
-    @Override
-    public void radiusChoice(int choice) {
-        radio = choice;
-        Toast.makeText(this, "ELECCION " + Integer.toString(choice), Toast.LENGTH_SHORT).show();
+                        intento.putExtra(Data.KEY_VALUE, viewHolder.getAdapterPosition());
+
+                        context.startActivity(intento);
+                    }
+                }
+            });
+        }
+
+        @Override
+        public int getItemCount() {
+            return items.size();
+        }
+
     }
 }
